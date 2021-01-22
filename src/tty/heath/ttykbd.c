@@ -7,6 +7,8 @@
  *		decvax!decwrl!dec-rhea!dec-rex!conroy
  */
 #include	"def.h"
+#include    "kbd.h"
+#include    "tty.h"
 
 /*
  * Empty key name table.
@@ -27,7 +29,7 @@ char	*keystrings[] = {
  * any special keys on the keyboard. This is really
  * easy, because there arn't any special keys.
  */
-getkbd()
+int getkbd(void)
 {
 	return (ttgetc());
 }
@@ -35,6 +37,6 @@ getkbd()
 /*
  * No special keys.
  */
-ttykeymapinit()
+void ttykeymapinit(void)
 {
 }

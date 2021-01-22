@@ -7,6 +7,9 @@
  *		decvax!decwrl!dec-rhea!dec-rex!conroy
  */
 #include	"def.h"
+#include    "echo.h"
+#include    "display.h"
+#include    "window.h"
 
 /*
  * Reposition dot in the current
@@ -18,7 +21,7 @@
  * Because of the default, it works like in
  * Gosling.
  */
-reposition(f, n, k)
+int reposition(int f, int n, int k)
 {
 	curwp->w_force = n;
 	curwp->w_flag |= WFFORCE;
@@ -40,7 +43,7 @@ reposition(f, n, k)
  * the window bigger again, and send another command,
  * everything will get fixed!
  */
-refresh(f, n, k)
+int refresh(int f, int n, int k)
 {
 	register WINDOW	*wp;
 	register int	oldnrow;
@@ -79,7 +82,7 @@ refresh(f, n, k)
  * nothing if there is only 1 window on
  * the screen.
  */
-nextwind(f, n, k)
+int nextwind(int f, int n, int k)
 {
 	register WINDOW	*wp;
 
@@ -97,7 +100,7 @@ nextwind(f, n, k)
  * although the command does not do a lot
  * if there is 1 window.
  */
-prevwind(f, n, k)
+int prevwind(int f, int n, int k)
 {
 	register WINDOW	*wp1;
 	register WINDOW	*wp2;
@@ -123,8 +126,7 @@ prevwind(f, n, k)
  * code by having "move down" just be an interface
  * to "move up".
  */
-mvdnwind(f, n, k)
-register int	n;
+int mvdnwind(int f, int n, int k)
 {
 	return (mvupwind(f, -n, KRANDOM));
 }
@@ -137,8 +139,7 @@ register int	n;
  * in the new framing of the window (this command does
  * not really move "."; it moves the frame).
  */
-mvupwind(f, n, k)
-register int	n;
+int mvupwind(int f, int n, int k)
 {
 	register LINE	*lp;
 	register int	i;
@@ -180,7 +181,7 @@ register int	n;
  * distruction of a window makes a buffer
  * become undisplayed.
  */
-onlywind(f, n, k)
+int onlywind(int f, int n, int k)
 {
 	register WINDOW	*wp;
 	register LINE	*lp;
@@ -228,7 +229,7 @@ onlywind(f, n, k)
  * a "malloc" failure allocating the structure
  * for the new window.
  */
-splitwind(f, n, k)
+int splitwind(int f, int n, int k)
 {
 	register WINDOW	*wp;
 	register LINE	*lp;
@@ -306,7 +307,7 @@ splitwind(f, n, k)
  * hard work. You don't just set "force reframe"
  * because dot would move.
  */
-enlargewind(f, n, k)
+int enlargewind(int f, int n, int k)
 {
 	register WINDOW	*adjwp;
 	register LINE	*lp;
@@ -353,7 +354,7 @@ enlargewind(f, n, k)
  * the window descriptions. Ask the redisplay to
  * do all the hard work.
  */
-shrinkwind(f, n, k)
+int shrinkwind(int f, int n, int k)
 {
 	register WINDOW	*adjwp;
 	register LINE	*lp;
@@ -403,7 +404,7 @@ shrinkwind(f, n, k)
  * NULL on error.
  */
 WINDOW	*
-wpopup()
+wpopup(void)
 {
 	register WINDOW	*wp;
 

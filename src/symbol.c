@@ -11,53 +11,19 @@
  * keymap has been moved to a better place.
  */
 #include	"def.h"
+#include    "echo.h"
+#include    "basic.h"
+#include    "buffer.h"
+#include    "extend.h"
+#include    "file.h"
+#include    "main.h"
+#include    "random.h"
+#include    "region.h"
+#include    "search.h"
+#include    "window.h"
+#include    "word.h"
 
 #define	DIRLIST	0			/* Disarmed!			*/
-
-/*
- * Defined by "main.c".
- */
-extern	int	ctrlg();		/* Abort out of things		*/
-extern	int	quit();			/* Quit				*/
-extern	int	ctlxlp();		/* Begin macro			*/
-extern	int	ctlxrp();		/* End macro			*/
-extern	int	ctlxe();		/* Execute macro		*/
-extern	int	jeffexit();		/* Jeff Lomicka style exit.	*/
-extern  int	showversion();		/* Show version numbers, etc.	*/
-
-/*
- * Defined by "search.c".
- */
-extern	int	forwsearch();		/* Search forward		*/
-extern	int	backsearch();		/* Search backwards		*/
-extern  int	searchagain();		/* Repeat last search command	*/
-extern  int	forwisearch();		/* Incremental search forward	*/
-extern  int	backisearch();		/* Incremental search backwards	*/
-extern  int	queryrepl();		/* Query replace		*/
-
-/*
- * Defined by "basic.c".
- */
-extern	int	gotobol();		/* Move to start of line	*/
-extern	int	backchar();		/* Move backward by characters	*/
-extern	int	gotoeol();		/* Move to end of line		*/
-extern	int	forwchar();		/* Move forward by characters	*/
-extern	int	gotobob();		/* Move to start of buffer	*/
-extern	int	gotoeob();		/* Move to end of buffer	*/
-extern	int	forwline();		/* Move forward by lines	*/
-extern	int	backline();		/* Move backward by lines	*/
-extern	int	forwpage();		/* Move forward by pages	*/
-extern	int	backpage();		/* Move backward by pages	*/
-extern	int	setmark();		/* Set mark			*/
-extern	int	swapmark();		/* Swap "." and mark		*/
-extern	int	gotoline();		/* Go to a specified line.	*/
-
-/*
- * Defined by "buffer.c".
- */
-extern	int	listbuffers();		/* Display list of buffers	*/
-extern	int	usebuffer();		/* Switch a window to a buffer	*/
-extern	int	killbuffer();		/* Make a buffer go away.	*/
 
 #if	DIRLIST
 /*
@@ -67,80 +33,12 @@ extern	int	dirlist();		/* Directory list.		*/
 #endif
 
 /*
- * Defined by "display.c".
- */
-extern  int	readmsg();		/* Read next line of message.	*/
-
-/*
- * Defined by "file.c".
- */
-extern	int	fileread();		/* Get a file, read only	*/
-extern	int	filevisit();		/* Get a file, read write	*/
-extern	int	filewrite();		/* Write a file			*/
-extern	int	filesave();		/* Save current file		*/
-extern	int	filename();		/* Adjust file name		*/
-
-/*
- * Defined by "random.c".
- */
-extern	int	selfinsert();		/* Insert character		*/
-extern	int	showcpos();		/* Show the cursor position	*/
-extern	int	twiddle();		/* Twiddle characters		*/
-extern	int	quote();		/* Insert literal		*/
-extern	int	openline();		/* Open up a blank line		*/
-extern	int	newline();		/* Insert CR-LF			*/
-extern	int	deblank();		/* Delete blank lines		*/
-extern	int	indent();		/* Insert CR-LF, then indent	*/
-extern	int	forwdel();		/* Forward delete		*/
-extern	int	backdel();		/* Backward delete		*/
-extern	int	killline();		/* Kill forward			*/
-extern	int	yank();			/* Yank back from killbuffer.	*/
-
-/*
- * Defined by "region.c".
- */
-extern	int	killregion();		/* Kill region.			*/
-extern	int	copyregion();		/* Copy region to kill buffer.	*/
-extern	int	lowerregion();		/* Lower case region.		*/
-extern	int	upperregion();		/* Upper case region.		*/
-
-/*
  * Defined by "spawn.c".
  */
 extern	int	spawncli();		/* Run CLI in a subjob.		*/
 
-/*
- * Defined by "window.c".
- */
-extern	int	reposition();		/* Reposition window		*/
-extern	int	refresh();		/* Refresh the screen		*/
-extern	int	nextwind();		/* Move to the next window	*/
-extern  int	prevwind();		/* Move to the previous window	*/
-extern	int	mvdnwind();		/* Move window down		*/
-extern	int	mvupwind();		/* Move window up		*/
-extern	int	onlywind();		/* Make current window only one	*/
-extern	int	splitwind();		/* Split current window		*/
-extern	int	enlargewind();		/* Enlarge display window.	*/
-extern	int	shrinkwind();		/* Shrink window.		*/
-
-/*
- * Defined by "word.c".
- */
-extern	int	backword();		/* Backup by words		*/
-extern	int	forwword();		/* Advance by words		*/
-extern	int	upperword();		/* Upper case word.		*/
-extern	int	lowerword();		/* Lower case word.		*/
-extern	int	capword();		/* Initial capitalize word.	*/
-extern	int	delfword();		/* Delete forward word.		*/
-extern	int	delbword();		/* Delete backward word.	*/
-
-/*
- * Defined by "extend.c".
- */
-extern	int	extend();		/* Extended commands.		*/
-extern	int	help();			/* Help key.			*/
-extern	int	bindtokey();		/* Modify key bindings.		*/
-extern	int	wallchart();		/* Make wall chart.		*/
+static int symhash(char *cp);
+static void keyadd(int new, int (*funcp)(), char *name);
 
 typedef	struct	{
 	short	k_key;			/* Key to bind.			*/
@@ -242,8 +140,7 @@ KEY	key[] = {
  * the symbol is not found.
  */
 SYMBOL	*
-symlookup(cp)
-register char	*cp;
+symlookup(char *cp)
 {
 	register SYMBOL	*sp;
 
@@ -264,8 +161,7 @@ register char	*cp;
  * may get a nagative number on some machines, and the "%"
  * will return a negative number!
  */
-symhash(cp)
-register char	*cp;
+static int symhash(char *cp)
 {
 	register int	c;
 	register int	n;
@@ -284,7 +180,7 @@ register char	*cp;
  * specific keymap initialization code is called at the
  * very end to finish up. All errors are fatal.
  */
-keymapinit()
+void keymapinit(void)
 {
 	register SYMBOL	*sp;
 	register KEY	*kp;
@@ -323,9 +219,7 @@ keymapinit()
  * key, bind it as a side effect. All errors
  * are fatal.
  */
-keyadd(new, funcp, name)
-int	(*funcp)();
-char	*name;
+static void keyadd(int new, int (*funcp)(), char *name)
 {
 	register SYMBOL	*sp;
 	register int	hash;
@@ -351,9 +245,7 @@ char	*name;
  * routine "name". If the name cannot be found,
  * or the key is already bound, abort.
  */
-keydup(new, name)
-register int	new;
-char		*name;
+void keydup(int new, char *name)
 {
 	register SYMBOL	*sp;
 

@@ -18,6 +18,8 @@
  * both off, the terminal is a VT52.
  */
 #include	"def.h"
+#include    "display.h"
+#include    "tty.h"
 
 /*
  * You can change these back to the types
@@ -86,6 +88,16 @@ VIDEO	blanks;				/* Blank line image.		*/
 SCORE	score[NROW*NROW];
 #endif
 
+static void uline(int row, VIDEO *vvp, VIDEO *pvp);
+static void ucopy(VIDEO *vvp, VIDEO *pvp);
+static void hash(VIDEO *vp);
+static void setscores(int offs, int size);
+static void traceback(int offs, int size, int i, int j);
+static void modeline(WINDOW *wp);
+static void vtmove(int row, int col);
+static void vtputc(int c);
+static void vteeol(void);
+
 /*
  * Initialize the data structures used
  * by the display code. The edge vectors used
@@ -97,7 +109,7 @@ SCORE	score[NROW*NROW];
  * is marked as garbage, so all the right stuff happens
  * on the first call to redisplay.
  */
-vtinit()
+void vtinit(void)
 {
 	register VIDEO	*vp;
 	register int	i;
@@ -123,7 +135,7 @@ vtinit()
  * the cursor to the last line, erase the line, and
  * close the terminal channel.
  */
-vttidy()
+void vttidy(void)
 {
 	ttcolor(CTEXT);
 	ttnowindow();				/* No scroll window.	*/
@@ -141,7 +153,7 @@ vttidy()
  * on the line, which would make "vtputc" a little bit
  * more efficient. No checking for errors.
  */
-vtmove(row, col)
+static void vtmove(int row, int col)
 {
 	vtrow = row;
 	vtcol = col;
@@ -159,8 +171,7 @@ vtmove(row, col)
  * makes the tab code loop if you are not careful.
  * Three guesses how we found this.
  */
-vtputc(c)
-register int	c;
+static void vtputc(int c)
 {
 	register VIDEO	*vp;
 
@@ -186,7 +197,7 @@ register int	c;
  * if a hardware erase to end of line command
  * should be used to display this.
  */
-vteeol()
+static void vteeol(void)
 {
 	register VIDEO	*vp;
 
@@ -204,7 +215,7 @@ vteeol()
  * correct for the current window. Third, make the
  * virtual and physical screens the same.
  */
-update()
+void update(void)
 {
 	register LINE	*lp;
 	register WINDOW	*wp;
@@ -393,9 +404,7 @@ update()
  * virtual and physical screens the same when
  * display has done an update.
  */
-ucopy(vvp, pvp)
-register VIDEO	*vvp;
-register VIDEO	*pvp;
+static void ucopy(VIDEO *vvp, VIDEO *pvp)
 {
 	register int	i;
 
@@ -417,9 +426,7 @@ register VIDEO	*pvp;
  * line when updating CMODE color lines, because of the way that
  * reverse video works on most terminals.
  */
-uline(row, vvp, pvp)
-VIDEO	*vvp;
-VIDEO	*pvp;
+static void uline(int row, VIDEO *vvp, VIDEO *pvp)
 {
 #if	MEMMAP
 	putline(row+1, 1, &vvp->v_text[0]);
@@ -488,8 +495,7 @@ VIDEO	*pvp;
  * this routine. Called by "update" any time
  * there is a dirty window.
  */
-modeline(wp)
-register WINDOW	*wp;
+static void modeline(WINDOW *wp)
 {
 	register char	*cp;
 	register int	c;
@@ -563,8 +569,7 @@ register WINDOW	*wp;
  * by Bob McNamara; better than it used to be on
  * just about any machine.
  */
-hash(vp)
-register VIDEO	*vp;
+static void hash(VIDEO *vp)
 {
 	register int	i;
 	register int	n;
@@ -612,7 +617,7 @@ register VIDEO	*vp;
  * i = 1; do { } while (++i <=size)" will make the code quite a
  * bit better; but it looks ugly.
  */
-setscores(offs, size)
+static void setscores(int offs, int size)
 {
 	register SCORE	*sp;
 	register int	tempcost;
@@ -701,7 +706,7 @@ setscores(offs, size)
  * which is acceptable because this routine is much less compute
  * intensive then the code that builds the score matrix!
  */
-traceback(offs, size, i, j)
+static void traceback(int offs, int size, int i, int j)
 {
 	register int	itrace;
 	register int	jtrace;

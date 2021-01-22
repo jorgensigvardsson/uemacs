@@ -16,6 +16,12 @@
  * and the query-replace code, is by Rich Ellison.
  */
 #include	"def.h"
+#include    "echo.h"
+#include    "display.h"
+#include    "basic.h"
+#include    "line.h"
+#include    "main.h"
+#include    "tty.h"
 
 #define CCHR(x)		((x)-'@')
 
@@ -38,6 +44,20 @@ static	int	cip;
 
 int	srch_lastdir = SRCH_NOPR;		/* Last search flags.	*/
 
+static int isearch(int dir);
+static void is_cpush(int cmd);
+static void is_lpush(void);
+static void is_pop(void);
+static int is_peek(void);	
+static int is_undo(int *pptr, int* dir);
+static int is_find(int dir);
+static void is_prompt(int dir, int flag, int success);
+static void is_dspl(char *prompt,  int flag);
+static int forwsrch(void);
+static int backsrch(void);
+static int eq(int bc, int pc);
+static int readpattern(char *prompt);
+
 /*
  * Search forward.
  * Get a search string from the user, and search for it,
@@ -45,7 +65,7 @@ int	srch_lastdir = SRCH_NOPR;		/* Last search flags.	*/
  * matched characters, and display does all the hard stuff.
  * If not found, it just prints a message.
  */
-forwsearch(f, n, k)
+int forwsearch(int f, int n, int k)
 {
 	register int	s;
 
@@ -66,7 +86,7 @@ forwsearch(f, n, k)
  * pointing at the first character of the pattern [the last character that
  * was matched].
  */
-backsearch(f, n, k)
+int backsearch(int f, int n, int k)
 {
 	register int	s;
 
@@ -86,7 +106,7 @@ backsearch(f, n, k)
  * has been saved in "srch_lastdir", so you know which way
  * to go.
  */
-searchagain(f, n, k)
+int searchagain(int f, int n, int k)
 {
 	if (srch_lastdir == SRCH_FORW) {
 		if (forwsrch() == FALSE) {
@@ -110,7 +130,7 @@ searchagain(f, n, k)
  * Use incremental searching, initially in the forward direction.
  * isearch ignores any explicit arguments.
  */
-forwisearch(f, n, k)
+int forwisearch(int f, int n, int k)
 {
 	return (isearch(SRCH_FORW));
 }
@@ -119,7 +139,7 @@ forwisearch(f, n, k)
  * Use incremental searching, initially in the reverse direction.
  * isearch ignores any explicit arguments.
  */
-backisearch(f, n, k)
+int backisearch(int f, int n, int k)
 {
 	return (isearch(SRCH_BACK));
 }
@@ -136,7 +156,7 @@ backisearch(f, n, k)
  *	<DEL>	undoes last character typed. (tricky job to do this correctly).
  *	else	accumulate into search string
  */
-isearch(dir)
+static int isearch(int dir)
 {
 	register int	c;
 	register LINE	*clp;
@@ -273,15 +293,14 @@ isearch(dir)
 	}
 }
 
-is_cpush(cmd)
-register int	cmd;
+static void is_cpush(int cmd)
 {
 	if (++cip >= NSRCH)
 		cip = 0;
 	cmds[cip].s_code = cmd;
 }
 
-is_lpush()
+static void is_lpush(void)
 {
 	register int	ctp;
 
@@ -293,7 +312,7 @@ is_lpush()
 	cmds[ctp].s_dotp = curwp->w_dotp;
 }
 
-is_pop()
+static void is_pop(void)
 {
 	if (cmds[cip].s_code != SRCH_NOPR) {
 		curwp->w_doto  = cmds[cip].s_doto; 
@@ -305,7 +324,7 @@ is_pop()
 		cip = NSRCH-1;
 }
 
-is_peek()	
+static int is_peek(void)	
 {
 	if (cip == 0)
 		return (cmds[NSRCH-1].s_code);
@@ -313,9 +332,7 @@ is_peek()
 		return (cmds[cip-1].s_code);
 }
 
-is_undo(pptr, dir)
-register int	*pptr;
-register int	*dir;
+static int is_undo(int *pptr, int* dir)
 {
 	switch (cmds[cip].s_code) {
 	case SRCH_NOPR:
@@ -344,8 +361,7 @@ register int	*dir;
 	return (TRUE);
 }
 
-is_find(dir)
-register int	dir;
+static int is_find(int dir)
 {
 	register int	plen;
 
@@ -382,7 +398,7 @@ register int	dir;
  * of the callers looked at the status, so I just
  * made the checking vanish.
  */
-is_prompt(dir, flag, success)
+static void is_prompt(int dir, int flag, int success)
 {
 	if (dir == SRCH_FORW) {
 		if (success != FALSE)
@@ -402,8 +418,7 @@ is_prompt(dir, flag, success)
  * The "prompt" is just a string. The "flag" determines
  * if a "[ ]" or ":" embelishment is used.
  */
-is_dspl(prompt, flag)
-char	*prompt;
+static void is_dspl(char *prompt,  int flag)
 {
 	if (flag != FALSE)
 		eprintf("%s [%s]", prompt, pat);
@@ -417,7 +432,7 @@ char	*prompt;
  *	A space or a comma replaces the string, a period replaces and quits,
  *	an n doesn't replace, a C-G quits.
  */
-queryrepl(f, n, k)
+int queryrepl(int f, int n, int k)
 {
 	register int	s;
 	char		news[NPAT];	/* replacement string		*/
@@ -522,7 +537,7 @@ stopsearch:
  * is notified of the change, and TRUE is returned. If the
  * string isn't found, FALSE is returned.
  */
-forwsrch()
+static int forwsrch(void)
 {
 	register LINE	*clp;
 	register int	cbo;
@@ -575,7 +590,7 @@ forwsrch()
  * is notified of the change, and TRUE is returned. If the
  * string isn't found, FALSE is returned.
  */
-backsrch()
+static int backsrch(void)
 {
 	register LINE	*clp;
 	register int	cbo;
@@ -633,7 +648,7 @@ backsrch()
  * It has its case folded out. The
  * "pc" is from the pattern.
  */
-eq(bc, pc)
+static int eq(int bc, int pc)
 {
 	register int	ibc;
 	register int	ipc;
@@ -657,8 +672,7 @@ eq(bc, pc)
  * Display the old pattern, in the style of Jeff Lomicka. There is
  * some do-it-yourself control expansion.
  */
-readpattern(prompt)
-char	*prompt;
+static int readpattern(char *prompt)
 {
 	register int	s;
 	char		tpat[NPAT];

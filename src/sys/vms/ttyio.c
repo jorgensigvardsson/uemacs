@@ -7,7 +7,7 @@
  *		decvax!decwrl!dec-rhea!dec-rex!conroy
  */
 #include	"def.h"
-
+#include    "tty.h"
 #include	<stsdef.h>
 #include	<ssdef.h>
 #include	<descrip.h>
@@ -37,7 +37,7 @@ int	ncol;				/* Terminal size, columns.	*/
  * assign a channel to it, and set it raw. Let VMS handle the flow
  * control.
  */
-ttopen()
+void ttopen(void)
 {
 	struct	dsc$descriptor	idsc;
 	struct	dsc$descriptor	odsc;
@@ -91,7 +91,7 @@ ttopen()
  * before we go back home to the command interpreter.
  * On VMS it puts the terminal back in a reasonable state.
  */
-ttclose()
+void ttclose(void)
 {
 	int	status;
 	int	iosb[1];
@@ -112,7 +112,7 @@ ttclose()
  * we just put the characters in the big array,
  * after cheching for overflow.
  */
-ttputc(c)
+void ttputc(char c)
 {
 	if (nobuf >= NOBUF)
 		ttflush();
@@ -127,7 +127,7 @@ ttputc(c)
  * clever that can be done, and because you will see the
  * error as a messed up screen.
  */
-ttflush()
+void ttflush(void)
 {
 	int	iosb[2];
 
@@ -144,7 +144,7 @@ ttflush()
  * More complex in VMS that almost anyplace else, which
  * figures.
  */
-ttgetc()
+char ttgetc(void)
 {
 	int	status;
 	int	iosb[2];

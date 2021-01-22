@@ -7,6 +7,8 @@
  *		decvax!decwrl!dec-rhea!dec-rex!conroy
  */
 #include	"def.h"
+#include    "echo.h"
+#include    "fileio.h"
 
 extern	FILE	*fopen();
 static	FILE	*ffp;
@@ -14,8 +16,7 @@ static	FILE	*ffp;
 /*
  * Open a file for reading.
  */
-ffropen(fn)
-char	*fn;
+int ffropen(char *fn)
 {
 	ffp = fopen(fn, "r");
 	adjustcase(fn);
@@ -29,8 +30,7 @@ char	*fn;
  * Return TRUE if all is well, and
  * FALSE on error (cannot create).
  */
-ffwopen(fn)
-char	*fn;
+int ffwopen(char *fn)
 {
 	ffp = fopen(fn, "w");
 	adjustcase(fn);
@@ -45,7 +45,7 @@ char	*fn;
  * Close a file.
  * Should look at the status.
  */
-ffclose()
+int ffclose(void)
 {
 	fclose(ffp);
 	return (FIOSUC);
@@ -58,8 +58,7 @@ ffclose()
  * the free newline. Return the status.
  * Check only at the newline.
  */
-ffputline(buf, nbuf)
-register char	buf[];
+int ffputline(char buf[], int nbuf)
 {
 	register int	i;
 
@@ -85,8 +84,7 @@ register char	buf[];
  * both on VMS and on Ultrix (they get copied over from
  * VMS systems with DECnet).
  */
-ffgetline(buf, nbuf)
-register char	buf[];
+int ffgetline(char buf[], int nbuf)
 {
 	register int	c;
 	register int	i;
@@ -141,8 +139,7 @@ char	*fname;
  * file names, and lower looks better in the
  * modelines than upper.
  */
-adjustcase(fn)
-register char	*fn;
+void adjustcase(char *fn)
 {
 	register int	c;
 

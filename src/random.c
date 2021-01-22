@@ -12,6 +12,12 @@
  * that they are all command processors.
  */
 #include	"def.h"
+#include    "echo.h"
+#include    "basic.h"
+#include    "line.h"
+#include    "random.h"
+#include    "main.h"
+#include    "tty.h"
 
 /*
  * Display a bunch of useful information about
@@ -22,7 +28,7 @@
  * display; it does not truncate just because the screen does.
  * This is normally bound to "C-X =".
  */
-showcpos(f, n, k)
+int showcpos(int f, int n, int k)
 {
 	register LINE	*clp;
 	register int	cbo;
@@ -100,7 +106,7 @@ showcpos(f, n, k)
  * to "C-T". This always works within a line, so
  * "WFEDIT" is good enough.
  */
-twiddle(f, n, k)
+int twiddle(int f, int n, int k)
 {
 	register LINE	*dotp;
 	register int	doto;
@@ -129,7 +135,7 @@ twiddle(f, n, k)
  * is always read, even if it is inserted 0 times, for
  * regularity.
  */
-quote(f, n, k)
+int quote(int f, int n, int k)
 {
 	register int	s;
 	register int	c;
@@ -169,7 +175,7 @@ quote(f, n, k)
  * are discarded. This is the only routine that actually looks
  * the the "k" argument.
  */
-selfinsert(f, n, k)
+int selfinsert(int f, int n, int k)
 {
 	register int	c;
 
@@ -190,7 +196,7 @@ selfinsert(f, n, k)
  * procerssors. They even handle the looping. Normally
  * this is bound to "C-O".
  */
-openline(f, n, k)
+int openline(int f, int n, int k)
 {
 	register int	i;
 	register int	s;
@@ -218,7 +224,7 @@ openline(f, n, k)
  * as critical if screen update were a lot
  * more efficient.
  */
-newline(f, n, k)
+int newline(int f, int n, int k)
 {
 	register LINE	*lp;
 	register int	s;
@@ -248,7 +254,7 @@ newline(f, n, k)
  * blank lines after the line. Normally this command
  * is bound to "C-X C-O". Any argument is ignored.
  */
-deblank(f, n, k)
+int deblank(int f, int n, int k)
 {
 	register LINE	*lp1;
 	register LINE	*lp2;
@@ -280,7 +286,7 @@ deblank(f, n, k)
  * of the subcomands failed. Normally bound
  * to "C-J".
  */
-indent(f, n, k)
+int indent(int f, int n, int k)
 {
 	register int	nicol;
 	register int	c;
@@ -315,7 +321,7 @@ indent(f, n, k)
  * loss of text if typed with a big argument.
  * Normally bound to "C-D".
  */
-forwdel(f, n, k)
+int forwdel(int f, int n, int k)
 {
 	if (n < 0)
 		return (backdel(f, -n, KRANDOM));
@@ -334,7 +340,7 @@ forwdel(f, n, k)
  * Like delete forward, this actually does a kill
  * if presented with an argument.
  */
-backdel(f, n, k)
+int backdel(int f, int n, int k)
 {
 	register int	s;
 
@@ -361,7 +367,7 @@ backdel(f, n, k)
  * kills any text before dot on the current line,
  * then it kills back abs(arg) lines.
  */
-killline(f, n, k)
+int killline(int f, int n, int k)
 {
 	register int	chunk;
 	register LINE	*nextp;
@@ -411,7 +417,7 @@ killline(f, n, k)
  * the window (nothing moves, because all of the new
  * text landed off screen).
  */
-yank(f, n, k)
+int yank(int f, int n, int k)
 {
 	register int	c;
 	register int	i;

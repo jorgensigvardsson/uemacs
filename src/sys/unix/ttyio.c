@@ -12,9 +12,11 @@
  * the display in a barely buffered fashion.
  */
 #include	"def.h"
-
-#include	<termios.h>
+#include    "tty.h"
 #include	<poll.h>
+#include    <unistd.h>
+#define __USE_MISC
+#include	<termios.h>
 
 #define	NOBUF	512			/* Output buffer size.		*/
 
@@ -32,7 +34,7 @@ int	ncol;				/* Terminal size, columns.	*/
  * stolen to send signals. Use CBREAK mode, and set all
  * characters but start and stop to 0xFF.
  */
-ttopen()
+void ttopen(void)
 {
 	/* Save pos+attr, disable margins, set cursor far away, query pos */
 	const char query[] = "\e7" "\e[r" "\e[999;999H" "\e[6n";
@@ -75,7 +77,7 @@ ttopen()
  * before we go back home to the shell. Put all of
  * the terminal parameters back.
  */
-ttclose()
+void ttclose(void)
 {
 	ttflush();
 	tcsetattr(1, TCSADRAIN, &oldtty);	/* return to original mode */
@@ -86,7 +88,7 @@ ttclose()
  * Characters are buffered up, to make things
  * a little bit more efficient.
  */
-ttputc(c)
+void ttputc(char c)
 {
 	if (nobuf >= NOBUF)
 		ttflush();
@@ -96,10 +98,11 @@ ttputc(c)
 /*
  * Flush output.
  */
-ttflush()
+void ttflush(void)
 {
 	if (nobuf != 0) {
-		write(1, obuf, nobuf);
+		if (write(1, obuf, nobuf) < 0)
+            abort();
 		nobuf = 0;
 	}
 }
@@ -109,7 +112,7 @@ ttflush()
  * All 8 bits are returned, so that you can use
  * a multi-national terminal.
  */
-ttgetc()
+char ttgetc(void)
 {
 	char	buf[1];
 

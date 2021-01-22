@@ -7,6 +7,7 @@
  *		decvax!decwrl!dec-rhea!dec-rex!conroy
  */
 #include	"def.h"
+#include    "spawn.h"
 
 #include	<ssdef.h>
 #include	<stsdef.h>
@@ -29,7 +30,7 @@ extern	short	iochan;
  * some (unknown) condition, you don't get one
  * free when DCL starts up.
  */
-spawncli(f, n, k)
+int spawncli(int f, int n, int k)
 {
 	ttcolor(CTEXT);				/* Normal color.	*/
 	ttwindow(0, nrow-1);			/* Full screen scroll.	*/

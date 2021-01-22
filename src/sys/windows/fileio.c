@@ -1,17 +1,18 @@
 /*
  * File I/O. Based on the original source code by Dave Conroy.
  * 
- * Jörgen Sigvardsson <jorgen.sigvardsson@gmail.com>
+ * Jï¿½rgen Sigvardsson <jorgen.sigvardsson@gmail.com>
  */
 #include	"def.h"
+#include    "echo.h"
+#include    "fileio.h"
 
 static	FILE	*ffp;
 
 /*
  * Open a file for reading.
  */
-ffropen(fn)
-char	*fn;
+int ffropen(char *fn)
 {
 	if ((ffp=fopen(fn, "r")) == NULL)
 		return (FIOFNF);
@@ -23,8 +24,7 @@ char	*fn;
  * Return TRUE if all is well, and
  * FALSE on error (cannot create).
  */
-ffwopen(fn)
-char	*fn;
+int ffwopen(char *fn)
 {
 	if ((ffp=fopen(fn, "w")) == NULL) {
 		eprintf("Cannot open file for writing");
@@ -37,7 +37,7 @@ char	*fn;
  * Close a file.
  * Should look at the status.
  */
-ffclose()
+int ffclose(void)
 {
 	fclose(ffp);
 	return (FIOSUC);
@@ -50,8 +50,7 @@ ffclose()
  * the free newline. Return the status.
  * Check only at the newline.
  */
-ffputline(buf, nbuf)
-register char	buf[];
+int ffputline(char buf[], int nbuf)
 {
 	register int	i;
 
@@ -77,8 +76,7 @@ register char	buf[];
  * both on VMS and on Ultrix (they get copied over from
  * VMS systems with DECnet).
  */
-ffgetline(buf, nbuf)
-register char	buf[];
+int ffgetline(char buf[], int nbuf)
 {
 	register int	c;
 	register int	i;
@@ -151,8 +149,7 @@ char	*fname;
  * to solve is getting 2 buffers holding the same file if
  * you visit one of them with the "caps lock" key down.
  */
-adjustcase(fn)
-register char	*fn;
+void adjustcase(char *fn)
 {
 	register int	c;
 

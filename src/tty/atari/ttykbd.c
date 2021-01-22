@@ -7,6 +7,8 @@
  *		decvax!decwrl!dec-rhea!dec-rex!conroy
  */
 #include	"def.h"
+#include    "kbd.h"
+#include    "symbol.h"
 #include	<osbind.h>
 
 /*
@@ -31,7 +33,7 @@ char	*keystrings[] = {
  * codes. I might want to make the "Alt" key work like
  * a "Meta" key, by looking at scan code.
  */
-getkbd()
+int getkbd(void)
 {
 	register long	rawkey;
 	register int	k;
@@ -85,7 +87,7 @@ getkbd()
  * All of the Fn keys are bindable, but there
  * are no default bindings.
  */
-ttykeymapinit()
+void ttykeymapinit(void)
 {
 	keydup(KHELP,	"help");
 	keydup(KUNDO,	"execute-macro");

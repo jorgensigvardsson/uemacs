@@ -5,6 +5,8 @@
  */
 #include <Windows.h>
 #include "def.h"
+#include "echo.h"
+#include    "spawn.h"
 
 /*
  * This code does a one of 2 different
@@ -16,7 +18,7 @@
  * a subshell using fork/exec. Bound to "C-C", and used
  * as a subcommand by "C-Z".
  */
-spawncli(f, n, k)
+int spawncli(int f, int n, int k)
 {
 	DWORD old_input_mode;
 	DWORD old_output_mode;

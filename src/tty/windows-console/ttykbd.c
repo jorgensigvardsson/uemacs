@@ -1,9 +1,12 @@
 /*
  * ANSI input driver. Based on the original ANSI source code by Dave Conroy.
  *
- * Jörgen Sigvardsson <jorgen.sigvardsson@gmail.com>
+ * Jï¿½rgen Sigvardsson <jorgen.sigvardsson@gmail.com>
  */
 #include	"def.h"
+#include    "kbd.h"
+#include    "tty.h"
+#include    "symbol.h"
 
 #define	ESC	0x1B			/* Escape, arrows et al.	*/
 #define	AGRAVE	0x60			/* LK201 kludge.		*/
@@ -52,7 +55,7 @@ char	*keystrings[] = {
  * control area. The C0 controls go right through, and
  * get remapped by "getkey".
  */
-getkbd()
+int getkbd(void)
 {
 	register int	c;
 	register int	n;
@@ -129,7 +132,7 @@ loop:
  * As is the case of all the keymap routines, errors
  * are very fatal.
  */
-ttykeymapinit()
+void ttykeymapinit(void)
 {
 	register SYMBOL	*sp;
 	register int	i;

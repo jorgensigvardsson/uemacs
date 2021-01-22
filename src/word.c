@@ -14,6 +14,11 @@
  * this file.
  */
 #include	"def.h"
+#include    "basic.h"
+#include    "line.h"
+#include    "word.h"
+
+static int inword(void);
 
 /*
  * Move the cursor backward by
@@ -22,7 +27,7 @@
  * routines. Error if you try to move beyond
  * the buffers.
  */
-backword(f, n, k)
+int backword(int f, int n, int k)
 {
 	if (n < 0)
 		return (forwword(f, -n, KRANDOM));
@@ -47,7 +52,7 @@ backword(f, n, k)
  * motion is done by "forwchar". Error if you
  * try and move beyond the buffer's end.
  */
-forwword(f, n, k)
+int forwword(int f, int n, int k)
 {
 	if (n < 0)
 		return (backword(f, -n, KRANDOM));
@@ -71,7 +76,7 @@ forwword(f, n, k)
  * if you try and move beyond the end of the
  * buffer.
  */
-upperword(f, n, k)
+int upperword(int f, int n, int k)
 {
 	register int	c;
 
@@ -102,7 +107,7 @@ upperword(f, n, k)
  * convert characters to lower case. Error if you
  * try and move over the end of the buffer.
  */
-lowerword(f, n, k)
+int lowerword(int f, int n, int k)
 {
 	register int	c;
 
@@ -134,7 +139,7 @@ lowerword(f, n, k)
  * case, and subsequent characters to lower case. Error
  * if you try and move past the end of the buffer.
  */
-capword(f, n, k)
+int capword(int f, int n, int k)
 {
 	register int	c;
 
@@ -176,7 +181,7 @@ capword(f, n, k)
  * "kill lots of words" and have the command stop in a reasonable
  * way when it hits the end of the buffer. Normally this is
  */
-delfword(f, n, k)
+int delfword(int f, int n, int k)
 {
 	register int	size;
 	register LINE	*dotp;
@@ -220,7 +225,7 @@ out:
  * be wierd. Normally this is bound to "M-Rubout" and
  * to "M-Backspace".
  */
-delbword(f, n, k)
+int delbword(int f, int n, int k)
 {
 	register int	size;
 
@@ -257,7 +262,7 @@ out:
  * part of a word. The word character list is hard
  * coded. Should be setable.
  */
-inword()
+static int inword(void)
 {
 	if (curwp->w_doto == llength(curwp->w_dotp))
 		return (FALSE);

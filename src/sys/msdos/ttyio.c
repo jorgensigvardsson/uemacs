@@ -7,7 +7,7 @@
  *		decvax!decwrl!dec-rhea!dec-rex!conroy
  */
 #include	"def.h"
-
+#include    "tty.h"
 #include	<dos.h>
 
 int	nrow;				/* Terminal size, rows.		*/
@@ -17,7 +17,7 @@ int	ncol;				/* Terminal size, columns.	*/
  * Initialization.
  * Almost no operation in MS-DOS.
  */
-ttopen()
+void ttopen(void)
 {
 	nrow = NROW;
 	ncol = NCOL;
@@ -26,14 +26,14 @@ ttopen()
 /*
  * No operation in MS-DOS.
  */
-ttclose()
+void ttclose(void)
 {
 }
 
 /*
  * Write character.
  */
-ttputc(c)
+void ttputc(char c)
 {
 	dosb(CONDIO, c, 0);
 }
@@ -41,14 +41,14 @@ ttputc(c)
 /*
  * No operation in MS-DOS.
  */
-ttflush()
+void ttflush(void)
 {
 }
 
 /*
  * Read character.
  */
-ttgetc()
+char ttgetc(void)
 {
 	return (dosb(CONRAW,  0, 0));
 }

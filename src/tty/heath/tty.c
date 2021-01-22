@@ -31,14 +31,14 @@ int	tcdell	=	11;
 /*
  * The Heath needs no initialization.
  */
-ttinit()
+void ttinit(void)
 {
 }
 
 /*
  * The Heath needs no tidy up.
  */
-tttidy()
+void tttidy(void)
 {
 }
 
@@ -49,7 +49,7 @@ tttidy()
  * have left the cursor in the right
  * location last time!
  */
-ttmove(row, col)
+void ttmove(int row, int col)
 {
 	if (ttrow!=row || ttcol!=col) {
 		if (row > NROW)
@@ -68,7 +68,7 @@ ttmove(row, col)
 /*
  * Erase to end of line.
  */
-tteeol()
+void tteeol(void)
 {
 	ttputc(ESC);
 	ttputc('K');
@@ -77,7 +77,7 @@ tteeol()
 /*
  * Erase to end of page.
  */
-tteeop()
+void tteeop(void)
 {
 	ttputc(ESC);
 	ttputc('J');
@@ -86,7 +86,7 @@ tteeop()
 /*
  * Make a noise.
  */
-ttbeep()
+void ttbeep(void)
 {
 	ttputc(BEL);
 	ttflush();
@@ -99,7 +99,7 @@ ttbeep()
  * a cluster of clever insert and delete commands,
  * because there are no scroll regions.
  */
-ttinsl(row, bot, nchunk)
+void ttinsl(int row, int bot, int nchunk)
 {
 	register int	i;
 
@@ -131,7 +131,7 @@ ttinsl(row, bot, nchunk)
  * echo area makes a boundry condition
  * go away.
  */
-ttdell(row, bot, nchunk)
+void ttdell(int row, int bot, int nchunk)
 {
 	register int	i;
 
@@ -157,14 +157,14 @@ ttdell(row, bot, nchunk)
 /*
  * No-op.
  */
-ttwindow(top, bot)
+void ttwindow(int top, int bot)
 {
 }
 
 /*
  * No-op.
  */
-ttnowindow()
+void ttnowindow(void)
 {
 }
 
@@ -174,8 +174,7 @@ ttnowindow()
  * the mode line. Rich knew the sequences for the
  * Heath by heart.
  */
-ttcolor(color)
-register int	color;
+void ttcolor(int color)
 {
 	if (color != tthue) {
 		if (color == CTEXT) {		/* Normal video.	*/
@@ -192,6 +191,6 @@ register int	color;
 /*
  * No-op.
  */
-ttresize()
+void ttresize()
 {
 }

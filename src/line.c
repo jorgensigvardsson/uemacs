@@ -25,6 +25,9 @@
  * nonsense.
  */
 #include	"def.h"
+#include    "echo.h"
+#include    "basic.h"
+#include    "line.h"
 
 #define	NBLOCK	16			/* Line block chunk size	*/
 
@@ -45,9 +48,7 @@ int	ksize	= 0;			/* # of bytes allocated in KB.	*/
  * any memory left. Print a message in the
  * message line if no space.
  */
-LINE	*
-lalloc(used)
-register int	used;
+LINE *lalloc(int used)
 {
 	register LINE	*lp;
 	register int	size;
@@ -74,8 +75,7 @@ register int	used;
  * described in the above comments don't hold
  * here.
  */
-lfree(lp)
-register LINE	*lp;
+void lfree(LINE *lp)
 {
 	register BUFFER	*bp;
 	register WINDOW	*wp;
@@ -123,8 +123,7 @@ register LINE	*lp;
  * HARD. Set MODE if the mode line needs to be
  * updated (the "*" has to be set).
  */
-lchange(flag)
-register int	flag;
+void lchange(int flag)
 {
 	register WINDOW	*wp;
 
@@ -154,7 +153,7 @@ register int	flag;
  * the place where you did the insert. Return TRUE
  * if all is well, and FALSE on errors.
  */
-linsert(n, c)
+int linsert(int n, int c)
 {
 	register char	*cp1;
 	register char	*cp2;
@@ -241,7 +240,7 @@ linsert(n, c)
  * easier then in the above case, because the split
  * forces more updating.
  */
-lnewline()
+int lnewline(void)
 {
 	register char	*cp1;
 	register char	*cp2;
@@ -297,7 +296,7 @@ lnewline()
  * the buffer. The "kflag" is TRUE if the text
  * should be put in the kill buffer.
  */
-ldelete(n, kflag)
+int ldelete(int n, int kflag)
 {
 	register char	*cp1;
 	register char	*cp2;
@@ -366,7 +365,7 @@ ldelete(n, kflag)
  * about in memory. Return FALSE on error and TRUE if all
  * looks ok. Called by "ldelete" only.
  */
-ldelnewline()
+int ldelnewline(void)
 {
 	register char	*cp1;
 	register char	*cp2;
@@ -449,10 +448,7 @@ ldelnewline()
  * There is a casehack disable flag (normally it likes to match
  * case of replacement to what was there).
  */
-lreplace(plen, st, f)
-register int	plen;			/* length to remove		*/
-char		*st;			/* replacement string		*/
-int		f;			/* case hack disable		*/
+int lreplace(int plen, char *st, int f)
 {
 	register int	rlen;		/* replacement length		*/
 	register int	rtype;		/* capitalization 		*/
@@ -528,7 +524,7 @@ int		f;			/* case hack disable		*/
  * buffer array is released, just in case the buffer has
  * grown to immense size. No errors.
  */
-kdelete()
+void kdelete(void)
 {
 	if (kbufp != NULL) {
 		free((char *) kbufp);
@@ -547,7 +543,7 @@ kdelete()
  * well, and FALSE on errors. Print a message on
  * errors.
  */
-kinsert(c)
+int kinsert(int c)
 {
 	register char	*nbufp;
 	register int	i;
@@ -574,7 +570,7 @@ kinsert(c)
  * off the end, it returns "-1". This lets the caller
  * just scan along until it gets a "-1" back.
  */
-kremove(n)
+int kremove(int n)
 {
 	if (n >= kused)
 		return (-1);

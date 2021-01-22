@@ -7,6 +7,9 @@
  *		decvax!decwrl!dec-rhea!dec-rex!conroy
  */
 #include	"def.h"
+#include    "tty.h"
+
+static int getctl();
 
 /*
  * Read in a key, doing the terminal
@@ -17,7 +20,7 @@
  * C0 controls as received; this routine moves them to
  * the right spot in 11 bit code.
  */
-getkey()
+int getkey()
 {
 	register int	c;
 
@@ -38,7 +41,7 @@ getkey()
 /*
  * Used above.
  */
-getctl()
+static int getctl()
 {
 	register int	c;
 
@@ -57,9 +60,7 @@ getctl()
  * the rest. None of this code is terminal specific any
  * more. This makes adding keys easier.
  */
-keyname(cp, k)
-register char	*cp;
-register int	k;
+void keyname(char *cp, int k)
 {
 	register char	*np;
 	char		nbuf[3];

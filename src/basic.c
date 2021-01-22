@@ -13,11 +13,16 @@
  * current buffer framing bad, are hard.
  */
 #include	"def.h"
+#include    "echo.h"
+#include    "basic.h"
+
+static int getgoal(LINE *dlp);
+static void setgoal(void);
 
 /*
  * Go to beginning of line.
  */
-gotobol(f, n, k)
+int gotobol(int f, int n, int k)
 {
 	curwp->w_doto  = 0;
 	return (TRUE);
@@ -29,8 +34,7 @@ gotobol(f, n, k)
  * 0. Error if you try to move back from
  * the beginning of the buffer.
  */
-backchar(f, n, k)
-register int	n;
+int backchar(int f, int n, int k)
 {
 	register LINE	*lp;
 
@@ -52,7 +56,7 @@ register int	n;
 /*
  * Go to end of line.
  */
-gotoeol(f, n, k)
+int gotoeol(int f, int n, int k)
 {
 	curwp->w_doto  = llength(curwp->w_dotp);
 	return (TRUE);
@@ -64,8 +68,7 @@ gotoeol(f, n, k)
  * 0. Error if you try to move forward
  * from the end of the buffer.
  */
-forwchar(f, n, k)
-register int	n;
+int forwchar(int f, int n, int k)
 {
 	if (n < 0)
 		return (backchar(f, -n, KRANDOM));
@@ -87,7 +90,7 @@ register int	n;
  * buffer. Setting WFHARD is conservative,
  * but almost always the case.
  */
-gotobob(f, n, k)
+int gotobob(int f, int n, int k)
 {
 	curwp->w_dotp  = lforw(curbp->b_linep);
 	curwp->w_doto  = 0;
@@ -100,7 +103,7 @@ gotobob(f, n, k)
  * Setting WFHARD is conservative, but
  * almost always the case.
  */
-gotoeob(f, n, k)
+int gotoeob(int f, int n, int k)
 {
 	curwp->w_dotp  = curbp->b_linep;
 	curwp->w_doto  = 0;
@@ -115,7 +118,7 @@ gotoeob(f, n, k)
  * actually do it. The last command controls how
  * the goal column is set.
  */
-forwline(f, n, k)
+int forwline(int f, int n, int k)
 {
 	register LINE	*dlp;
 
@@ -140,7 +143,7 @@ forwline(f, n, k)
  * call your alternate. Figure out the new line and
  * call "movedot" to perform the motion.
  */
-backline(f, n, k)
+int backline(int f, int n, int k)
 {
 	register LINE	*dlp;
 
@@ -165,7 +168,7 @@ backline(f, n, k)
  * the edge of the screen; it's more like display then
  * show position.
  */
-setgoal()
+static void setgoal(void)
 {
 	register int	c;
 	register int	i;
@@ -190,8 +193,7 @@ setgoal()
  * routine above) and returns the best offset to use
  * when a vertical motion is made into the line.
  */
-getgoal(dlp)
-register LINE	*dlp;
+static int getgoal(LINE *dlp)
 {
 	register int	c;
 	register int	col;
@@ -224,8 +226,7 @@ register LINE	*dlp;
  * the window is zapped, we have to do a hard
  * update and get it back.
  */
-forwpage(f, n, k)
-register int	n;
+int forwpage(int f, int n, int k)
 {
 	register LINE	*lp;
 
@@ -257,8 +258,7 @@ register int	n;
  * hard update is done because the top line in
  * the window is zapped.
  */
-backpage(f, n, k)
-register int	n;
+int backpage(int f, int n, int k)
 {
 	register LINE	*lp;
 
@@ -288,7 +288,7 @@ register int	n;
  * the echo line unless we are running in a keyboard
  * macro, when it would be silly.
  */
-setmark(f, n, k)
+int setmark(int f, int n, int k)
 {
 	curwp->w_markp = curwp->w_dotp;
 	curwp->w_marko = curwp->w_doto;
@@ -304,7 +304,7 @@ setmark(f, n, k)
  * that moves the mark about. The only possible
  * error is "no mark".
  */
-swapmark(f, n, k)
+int swapmark(int f, int n, int k)
 {
 	register LINE	*odotp;
 	register int	odoto;
@@ -330,8 +330,7 @@ swapmark(f, n, k)
  * it is the line number, else prompt for a line number
  * to use.
  */
-gotoline(f, n, k)
-register int	n;
+int gotoline(int f, int n, int k)
 {
 	register LINE	*clp;
 	register int	s;

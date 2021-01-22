@@ -7,6 +7,13 @@
  *		decvax!decwrl!dec-rhea!dec-rex!conroy
  */
 #include	"def.h"
+#include    "echo.h"
+#include    "buffer.h"
+#include    "line.h"
+#include    "window.h"
+
+static void itoa_(char buf[], int width, int num);
+static int makelist(void);
 
 /*
  * Attach a buffer to a window. The
@@ -14,7 +21,7 @@
  * if the use count is 0. Otherwise, they come
  * from some other window.
  */
-usebuffer(f, n, k)
+int usebuffer(int f, int n, int k)
 {
 	register BUFFER	*bp;
 	register WINDOW	*wp;
@@ -64,7 +71,7 @@ usebuffer(f, n, k)
  * if the buffer has been changed). Then free the header
  * line and the buffer header. Bound to "C-X K".
  */
-killbuffer(f, n, k)
+int killbuffer(int f, int n, int k)
 {
 	register BUFFER	*bp;
 	register BUFFER	*bp1;
@@ -106,7 +113,7 @@ killbuffer(f, n, k)
  * then pops the data onto the screen. Bound to
  * "C-X C-B".
  */
-listbuffers(f, n, k)
+int listbuffers(int f, int n, int k)
 {
 	register int	s;
 
@@ -122,7 +129,7 @@ listbuffers(f, n, k)
  * by the "listbuffers" routine (above) and by
  * some other packages. Returns a status.
  */
-popblist()
+int popblist(void)
 {
 	register WINDOW	*wp;
 	register BUFFER	*bp;
@@ -163,7 +170,7 @@ popblist()
  * if everything works. Return FALSE if there
  * is an error (if there is no memory).
  */
-makelist()
+static int makelist(void)
 {
 	register char	*cp1;
 	register char	*cp2;
@@ -224,10 +231,7 @@ makelist()
 /*
  * Used above.
  */
-itoa_(buf, width, num)
-register char	buf[];
-register int	width;
-register int	num;
+static void itoa_(char buf[], int width, int num)
 {
 	buf[width] = 0;				/* End of string.	*/
 	while (num >= 10) {			/* Conditional digits.	*/
@@ -246,8 +250,7 @@ register int	num;
  * on the end. Return TRUE if it worked and
  * FALSE if you ran out of room.
  */
-addline(text)
-char	*text;
+int addline(char *text)
 {
 	register LINE	*lp;
 	register int	i;
@@ -275,7 +278,7 @@ char	*text;
  * they are not in the list. Return FALSE if
  * there are no changed buffers.
  */
-anycb()
+int anycb(void)
 {
 	register BUFFER	*bp;
 
@@ -295,9 +298,7 @@ anycb()
  * all buffers. Return pointer to the BUFFER
  * block for the buffer.
  */
-BUFFER	*
-bfind(bname, cflag)
-register char	*bname;
+BUFFER *bfind(char *bname, int cflag)
 {
 	register BUFFER	*bp;
 
@@ -323,9 +324,7 @@ register char	*bname;
  * "edinit" to create the buffer list
  * buffer.
  */
-BUFFER	*
-bcreate(bname)
-register char	*bname;
+BUFFER *bcreate(char *bname)
 {
 	register BUFFER	*bp;
 	register LINE	*lp;
@@ -361,8 +360,7 @@ register char	*bname;
  * that are required. Return TRUE if everything
  * looks good.
  */
-bclear(bp)
-register BUFFER	*bp;
+int bclear(BUFFER *bp)
 {
 	register LINE	*lp;
 	register int	s;

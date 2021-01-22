@@ -7,6 +7,8 @@
  *		decvax!decwrl!dec-rhea!dec-rex!conroy
  */
 #include	"def.h"
+#include    "echo.h"
+#include    "spawn.h"
 
 /*
  * Create a subjob with a copy
@@ -15,7 +17,7 @@
  * garbage so that you do a full repaint. Bound
  * to "C-C" and called from "C-Z".
  */
-spawncli(f, n, k)
+int spawncli(int f, int n, int k)
 {
 	eprintf("Not in CP/M-86");
 	return (FALSE);

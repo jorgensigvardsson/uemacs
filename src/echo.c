@@ -12,13 +12,24 @@
  * known universe.
  */
 #include	"def.h"
-#include    <stdarg.h>      /* Diviation from original sources - va_* macros */
+#include    "echo.h"
+#include    "display.h"
+#include    "tty.h"
+#include    "main.h"
+#include    <stdarg.h>
+
 int	epresf	= FALSE;		/* Stuff in echo line flag.	*/
 int	nmsg	= 0;			/* Size of occupied msg. area.	*/
 int	curmsgf	= FALSE;		/* Current alert state.		*/
 int	newmsgf	= FALSE;		/* New alert state.		*/
 
 char	msg[NMSG];			/* Random message storage.	*/
+
+
+static void eformat(char *fp, va_list ap);
+static void eputi(int i, int r);
+static int getxtra(SYMBOL *sp1, SYMBOL *sp2, int cpos);
+static int eread_v(char* fp, char *buf, int nbuf, int flag, va_list ap);
 
 /*
  * Send a string to the message system.
@@ -27,8 +38,7 @@ char	msg[NMSG];			/* Random message storage.	*/
  * Perhaps the message buffer should know how to get
  * larger, just like the kill buffer?
  */
-writemsg(sp)
-register char	*sp;
+int writemsg(char *sp)
 {
 	register int	c;
 
@@ -57,7 +67,7 @@ register char	*sp;
  * way (not ^G), and ABORT if you quit the mode with a
  * ^G.
  */
-readmsg()
+int readmsg(void)
 {
 	register int	c;
 	register int	i;
@@ -123,7 +133,7 @@ readmsg()
 /*
  * Erase the echo line.
  */
-eerase()
+void eerase(void)
 {
 	ttcolor(CTEXT);
 	ttmove(nrow-1, 0);
@@ -132,12 +142,6 @@ eerase()
 	epresf = FALSE;
 }
 
-/* Deviation from original sources: Prototype needed for eread OR 
- * eread can be moved before ereply - this intrudes less on the original 
- * sources
- */
-int ereply(char* fp, char* buf, int nbuf, ...);
-
 /*
  * Ask "yes" or "no" question.
  * Return ABORT if the user answers the question
@@ -145,8 +149,7 @@ int ereply(char* fp, char* buf, int nbuf, ...);
  * for "no" and TRUE for "yes". No formatting
  * services are available.
  */
-eyesno(sp)
-char	*sp;
+int eyesno(char *sp)
 {
 	register int	s;
 	char		buf[64];
@@ -179,7 +182,7 @@ int ereply(char* fp, char* buf, int nbuf, ...)
     va_list ap;
     int result;
     va_start(ap, nbuf);
-	result = eread(fp, buf, nbuf, EFNEW|EFCR, ap);
+	result = eread_v(fp, buf, nbuf, EFNEW|EFCR, ap);
     va_end(ap);
     return result;
 }
@@ -193,10 +196,18 @@ int ereply(char* fp, char* buf, int nbuf, ...)
  * new prompt), an EFAUTO (autocomplete), or EFCR (echo
  * the carriage return as CR).
  */
-eread(fp, buf, nbuf, flag, ap)
-char	*fp;
-char	*buf;
-va_list ap; /* Deviation from original source - now using va_* for portability */
+int eread(char* fp, char *buf, int nbuf, int flag, ...)
+{
+    va_list ap;
+    int result;
+
+    va_start(ap, flag);
+    result = eread_v(fp, buf, nbuf, flag, ap);
+    va_end(ap);
+    return result;
+}
+
+int eread_v(char* fp, char *buf, int nbuf, int flag, va_list ap)
 {
 	register int	cpos;
 	register SYMBOL	*sp1;
@@ -338,9 +349,7 @@ done:
  * be autocompleted at this point. Sometimes the two symbols
  * are the same, but this is normal.
  */
-getxtra(sp1, sp2, cpos)
-register SYMBOL	*sp1;
-register SYMBOL	*sp2;
+static int getxtra(SYMBOL *sp1, SYMBOL *sp2, int cpos)
 {
 	register int	i;
 
@@ -362,14 +371,18 @@ register SYMBOL	*sp2;
  * echo line. The formatting is done by a call
  * to the standard formatting routine.
  */
-void eprintf(char* fp, va_list ap)
+void eprintf(char* fp, ...)
 {
+    va_list ap;
+    va_start(ap, fp);
+
 	ttcolor(CTEXT);
 	ttmove(nrow-1, 0);
 	eformat(fp, ap);
 	tteeol();
 	ttflush();
 	epresf = TRUE;
+    va_end(ap);
 }
 
 /*
@@ -379,9 +392,7 @@ void eprintf(char* fp, va_list ap)
  * start of the echo line, and the erase to the end of
  * the echo line, is done by the caller.
  */
-eformat(fp, ap)
-register char	*fp;
-va_list	ap;
+static void eformat(char *fp, va_list ap)
 {
 	register int	c;
 
@@ -413,9 +424,7 @@ va_list	ap;
 /*
  * Put integer, in radix "r".
  */
-eputi(i, r)
-register int	i;
-register int	r;
+static void eputi(int i, int r)
 {
 	register int	q;
 
@@ -427,8 +436,7 @@ register int	r;
 /*
  * Put string.
  */
-eputs(s)
-register char	*s;
+void eputs(char *s)
 {
 	register int	c;
 
@@ -441,8 +449,7 @@ register char	*s;
  * control characters, and for the line
  * getting too long.
  */
-eputc(c)
-register int	c;
+void eputc(int c)
 {
 	if (ttcol < ncol) {
 		if (ISCTRL(c) != FALSE) {

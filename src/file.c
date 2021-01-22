@@ -7,6 +7,13 @@
  *		decvax!decwrl!dec-rhea!dec-rex!conroy
  */
 #include	"def.h"
+#include    "buffer.h"
+#include    "echo.h"
+#include    "file.h"
+#include    "line.h"
+#include    "fileio.h"
+
+static int writeout(char *fn);
 
 /*
  * Read a file into the current
@@ -14,7 +21,7 @@
  * find the name of the file, and call the standard
  * "read a file into the current buffer" code.
  */
-fileread(f, n, k)
+int fileread(int f, int n, int k)
 {
 	register int	s;
 	char		fname[NFILEN];
@@ -33,7 +40,7 @@ fileread(f, n, k)
  * the file, create a new buffer, read in the
  * text, and switch to the new buffer.
  */
-filevisit(f, n, k)
+int filevisit(int f, int n, int k)
 {
 	register BUFFER	*bp;
 	register WINDOW	*wp;
@@ -123,8 +130,7 @@ filevisit(f, n, k)
  * copy of nothing). Return a standard status. Print a summary
  * (lines read, error message) out as well.
  */
-readin(fname)
-char	fname[];
+int readin(char fname[])
 {
 	register LINE	*lp1;
 	register LINE	*lp2;
@@ -202,9 +208,7 @@ out:
  * BDC2		optional second left scan delimiter.
  * BDC3		optional right scan delimiter.
  */
-makename(bname, fname)
-char	bname[];
-char	fname[];
+void makename(char bname[], char fname[])
 {
 	register char	*cp1;
 	register char	*cp2;
@@ -239,7 +243,7 @@ char	fname[];
  * is more compatable with Gosling EMACS than
  * with ITS EMACS.
  */
-filewrite(f, n, k)
+int filewrite(int f, int n, int k)
 {
 	register WINDOW	*wp;
 	register int	s;
@@ -271,7 +275,7 @@ filewrite(f, n, k)
  * file name. If this is the first write since the read or visit,
  * then a backup copy of the file is made.
  */
-filesave(f, n, k)
+int filesave(int f, int n, int k)
 {
 	register WINDOW	*wp;
 	register int	s;
@@ -315,8 +319,7 @@ filesave(f, n, k)
  * a macro for this. Most of the grief is error
  * checking of some sort.
  */
-writeout(fn)
-char	*fn;
+static int writeout(char *fn)
 {
 	register int	s;
 	register LINE	*lp;
@@ -356,7 +359,7 @@ char	*fn;
  * as needing an update. You can type a blank line at the
  * prompt if you wish.
  */
-filename(f, n, k)
+int filename(int f, int n, int k)
 {
 	register WINDOW	*wp;
 	register int	s;

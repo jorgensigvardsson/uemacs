@@ -6,6 +6,7 @@
 #include    <Windows.h>
 #include    <wincon.h>
 #include	"def.h"
+#include    "tty.h"
 
 static char* obuf = NULL;
 static int	nobuf;
@@ -27,7 +28,7 @@ static HANDLE consoleInputHandle = INVALID_HANDLE_VALUE;
  * stolen to send signals. Use CBREAK mode, and set all
  * characters but start and stop to 0xFF.
  */
-void ttopen()
+void ttopen(void)
 {
     DWORD new_input_mode;
     DWORD new_output_mode;
@@ -81,7 +82,7 @@ void ttopen()
  * before we go back home to the shell. Put all of
  * the terminal parameters back.
  */
-void ttclose()
+void ttclose(void)
 {
     if (consoleOutputHandle != INVALID_HANDLE_VALUE) {
         SetConsoleScreenBufferInfoEx(consoleOutputHandle, &oldtty);
@@ -98,7 +99,7 @@ void ttclose()
 /*
  * Flush output.
  */
-void ttflush()
+void ttflush(void)
 {
     if (nobuf != 0) {
         WriteConsoleA(consoleOutputHandle, obuf, nobuf, NULL, NULL);

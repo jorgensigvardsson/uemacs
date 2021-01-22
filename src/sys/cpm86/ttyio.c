@@ -7,7 +7,7 @@
  *		decvax!decwrl!dec-rhea!dec-rex!conroy
  */
 #include	"def.h"
-
+#include    "tty.h"
 #include	<bdos.h>
 
 int	nrow;				/* Terminal size, rows.		*/
@@ -17,7 +17,7 @@ int	ncol;				/* Terminal size, columns.	*/
  * Set up terminal.
  * Almost no operation in CP/M-86.
  */
-ttopen()
+void ttopen(void)
 {
 	nrow = NROW;
 	ncol = NCOL;
@@ -26,14 +26,14 @@ ttopen()
 /*
  * No operation in CP/M-86.
  */
-ttclose()
+void ttclose(void)
 {
 }
 
 /*
  * Write character.
  */
-ttputc(c)
+void ttputc(char c)
 {
 	bios(BCONOUT, c, 0);
 }
@@ -41,14 +41,14 @@ ttputc(c)
 /*
  * No operation on CP/M-86.
  */
-ttflush()
+void ttflush(void)
 {
 }
 
 /*
  * Read character.
  */
-ttgetc()
+char ttgetc(void)
 {
 	return (biosb(BCONIN, 0, 0));
 }

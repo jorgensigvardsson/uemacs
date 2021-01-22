@@ -7,6 +7,8 @@
  *		decvax!decwrl!dec-rhea!dec-rex!conroy
  */
 #include	"def.h"
+#include    "echo.h"
+#include    "spawn.h"
 
 /*
  * Spawn CLI. Since MicroEMACS wants to hold
@@ -14,7 +16,7 @@
  * in GEMDOS. On the other hand, it sure would be a
  * nice thing to have.
  */
-spawncli(f, n, k)
+int spawncli(int f, int n, int k)
 {
 	eprintf("Not in GEMDOS");
 	return (FALSE);

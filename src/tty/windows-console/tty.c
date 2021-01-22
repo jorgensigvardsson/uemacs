@@ -1,7 +1,7 @@
 /*
  * ANSI display driver. Based on the original ANSI source code by Dave Conroy.
  *
- * Jörgen Sigvardsson <jorgen.sigvardsson@gmail.com>
+ * Jï¿½rgen Sigvardsson <jorgen.sigvardsson@gmail.com>
  */
 #include	"def.h"
 
@@ -22,14 +22,14 @@ int	tcdell	=	16;
 /*
  * no-op
  */
-ttinit()
+void ttinit(void)
 {
 }
 
 /*
  * no-op
  */
-tttidy()
+void tttidy(void)
 {
 }
 
@@ -40,7 +40,7 @@ tttidy()
  * have left the cursor in the right
  * location last time!
  */
-ttmove(row, col)
+void ttmove(int row, int col)
 {
 	if (ttrow!=row || ttcol!=col) {
 		ttputc(ESC);
@@ -57,7 +57,7 @@ ttmove(row, col)
 /*
  * Erase to end of line.
  */
-tteeol()
+void tteeol(void)
 {
 	ttputc(ESC);
 	ttputc('[');
@@ -67,7 +67,7 @@ tteeol()
 /*
  * Erase to end of page.
  */
-tteeop()
+void tteeop(void)
 {
 	ttputc(ESC);
 	ttputc('[');
@@ -77,7 +77,7 @@ tteeop()
 /*
  * Make a noise.
  */
-ttbeep()
+void ttbeep(void)
 {
 	ttputc(BEL);
 	ttflush();
@@ -88,8 +88,7 @@ ttbeep()
  * ascii, and write it out. Used to
  * deal with numeric arguments.
  */
-asciiparm(n)
-register int	n;
+void asciiparm(int n)
 {
 	register int	q;
 
@@ -107,7 +106,7 @@ register int	n;
  * case code. Put all of the back index commands out
  * in a block. 
  */
-ttinsl(row, bot, nchunk)
+void ttinsl(int row, int bot, int nchunk)
 {
 	if (row == bot) {			/* Funny case.		*/
 		if (nchunk != 1)
@@ -133,7 +132,7 @@ ttinsl(row, bot, nchunk)
  * The block delete is used by the slightly more
  * optimal display code.
  */
-ttdell(row, bot, nchunk)
+void ttdell(int row, int bot, int nchunk)
 {
 	if (row == bot) {			/* Funny case.		*/
 		if (nchunk != 1)
@@ -159,7 +158,7 @@ ttdell(row, bot, nchunk)
  * not turn into a no-op (the window adjustment
  * moves the cursor).
  */
-ttwindow(top, bot)
+void ttwindow(int top, int bot)
 {
 	if (tttop!=top || ttbot!=bot) {
 		ttputc(ESC);
@@ -187,7 +186,7 @@ ttwindow(top, bot)
  * to read the size of the screen as in "ttresize"
  * to do this right?
  */
-ttnowindow()
+void ttnowindow(void)
 {
 	ttputc(ESC);
 	ttputc('[');
@@ -208,8 +207,7 @@ ttnowindow()
  * line by line basis, so don't bother sending
  * out the color shift.
  */
-ttcolor(color)
-register int	color;
+void ttcolor(int color)
 {
 	if (color != tthue) {
 /*
@@ -241,7 +239,7 @@ endif
  * with a screen NROW by NCOL. Look in "window.c" to
  * see how the caller deals with a change.
  */
-ttresize()
+void ttresize()
 {
 	register int	c;
 	register int	newnrow;

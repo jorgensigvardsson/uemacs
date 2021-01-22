@@ -7,6 +7,10 @@
  *		decvax!decwrl!dec-rhea!dec-rex!conroy
  */
 #include	"def.h"
+#include    "echo.h"
+#include    "buffer.h"
+#include    "kbd.h"
+#include    "tty.h"
 
 /*
  * This function modifies the keyboard
@@ -16,7 +20,7 @@
  * work right if there is a keyboard macro floating around.
  * Should be fixed.
  */
-bindtokey(f, n, k)
+int bindtokey(int f, int n, int k)
 {
 	register int	s;
 	register char	*cp;
@@ -59,7 +63,7 @@ bindtokey(f, n, k)
  * and run the command if it is found and has the right type.
  * Print an error if there is anything wrong.
  */
-extend(f, n, k)
+int extend(int f, int n, int k)
 {
 	register SYMBOL	*sp;
 	register int	s;
@@ -81,7 +85,7 @@ extend(f, n, k)
  * "builtin". This is a bit of overkill, because this is the
  * only kind of function there is.
  */
-help(f, n, k)
+int help(int f, int n, int k)
 {
 	register SYMBOL	*sp;
 	register int	c;
@@ -104,7 +108,7 @@ help(f, n, k)
  * lets MicroEMACS produce it's own wall chart. The bindings to
  * "ins-self" are only displayed if there is an argument.
  */
-wallchart(f, n, k)
+int wallchart(int f, int n, int k)
 {
 	register int	s;
 	register int	key;

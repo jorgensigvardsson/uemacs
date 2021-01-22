@@ -1,0 +1,42 @@
+sys/unix/spawn.c: In function ‘spawncli’:
+sys/unix/spawn.c:55:2: warning: implicit declaration of function ‘ttcolor’ [-Wimplicit-function-declaration]
+   55 |  ttcolor(CTEXT);
+      |  ^~~~~~~
+sys/unix/spawn.c:56:2: warning: implicit declaration of function ‘ttnowindow’ [-Wimplicit-function-declaration]
+   56 |  ttnowindow();
+      |  ^~~~~~~~~~
+sys/unix/spawn.c:59:4: warning: implicit declaration of function ‘ttmove’; did you mean ‘remove’? [-Wimplicit-function-declaration]
+   59 |    ttmove(nrow-1, 0);
+      |    ^~~~~~
+      |    remove
+sys/unix/spawn.c:60:4: warning: implicit declaration of function ‘tteeol’ [-Wimplicit-function-declaration]
+   60 |    tteeol();
+      |    ^~~~~~
+sys/unix/spawn.c:71:2: warning: implicit declaration of function ‘ttflush’; did you mean ‘fflush’? [-Wimplicit-function-declaration]
+   71 |  ttflush();
+      |  ^~~~~~~
+      |  fflush
+sys/unix/spawn.c:72:2: warning: implicit declaration of function ‘ttclose’; did you mean ‘fclose’? [-Wimplicit-function-declaration]
+   72 |  ttclose();
+      |  ^~~~~~~
+      |  fclose
+sys/unix/spawn.c:74:3: warning: implicit declaration of function ‘kill’ [-Wimplicit-function-declaration]
+   74 |   kill(0, SIGTSTP);
+      |   ^~~~
+sys/unix/spawn.c:78:12: warning: implicit declaration of function ‘fork’ [-Wimplicit-function-declaration]
+   78 |   if ((pid=fork()) < 0) {
+      |            ^~~~
+sys/unix/spawn.c:85:4: warning: implicit declaration of function ‘execl’ [-Wimplicit-function-declaration]
+   85 |    execl(shellp, "sh", "-i", NULL);
+      |    ^~~~~
+sys/unix/spawn.c:86:4: warning: implicit declaration of function ‘_exit’; did you mean ‘exit’? [-Wimplicit-function-declaration]
+   86 |    _exit(0);  /* Should do better! */
+      |    ^~~~~
+      |    exit
+sys/unix/spawn.c:88:16: warning: implicit declaration of function ‘wait’ [-Wimplicit-function-declaration]
+   88 |   while ((wpid=wait(&status))>=0 && wpid!=pid)
+      |                ^~~~
+sys/unix/spawn.c:94:2: warning: implicit declaration of function ‘ttopen’; did you mean ‘fopen’? [-Wimplicit-function-declaration]
+   94 |  ttopen();
+      |  ^~~~~~
+      |  fopen

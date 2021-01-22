@@ -11,6 +11,8 @@
  * in the 4.X BSD C shell.
  */
 #include	"def.h"
+#include    "echo.h"
+#include    "spawn.h"
 
 #include	<sgtty.h>
 #include	<signal.h>
@@ -36,7 +38,7 @@ extern	char	*getenv();
  * a subshell using fork/exec. Bound to "C-C", and used
  * as a subcommand by "C-Z".
  */
-spawncli(f, n, k)
+int spawncli(int f, int n, int k)
 {
 	register int	pid;
 	register int	wpid;

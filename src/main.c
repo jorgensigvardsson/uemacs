@@ -7,6 +7,14 @@
  *		decvax!decwrl!dec-rhea!dec-rex!conroy
  */
 #include	"def.h"
+#include    "echo.h"
+#include    "buffer.h"
+#include    "display.h"
+#include    "file.h"
+#include    "kbd.h"
+#include    "main.h"
+#include    "symbol.h"
+#include    "tty.h"
 
 int	thisflag;			/* Flags, this command		*/
 int	lastflag;			/* Flags, last command		*/
@@ -23,8 +31,9 @@ char	pat[NPAT];			/* Pattern			*/
 SYMBOL	*symbol[NSHASH];		/* Symbol table listhead.	*/
 SYMBOL	*binding[NKEYS];		/* Key bindings.		*/
 
-main(argc, argv)
-char	*argv[];
+static void edinit(char bname[]);
+
+int main(int argc, char *argv[])
 {
 	register int	c;
 	register int	f;
@@ -93,7 +102,7 @@ loop:
  * is not usable (there is no way to get this into a symbol table
  * entry now). Also fiddle with the flags.
  */
-execute(c, f, n)
+int execute(int c, int f, int n)
 {
 	register SYMBOL	*sp;
 	register int	status;
@@ -115,8 +124,7 @@ execute(c, f, n)
  * told to read in a file by default, and we want the
  * buffer name to be right.
  */
-edinit(bname)
-char	bname[];
+static void edinit(char bname[])
 {
 	register BUFFER	*bp;
 	register WINDOW	*wp;
@@ -150,7 +158,7 @@ char	bname[];
  * interpreter in a subjob. Two of these will get you
  * out. Bound to "C-Z".
  */
-jeffexit(f, n, k)
+int jeffexit(int f, int n, int k)
 {
 	if ((curbp->b_flag&BFCHG) != 0)		/* Changed.		*/
 		return (filesave(f, n, KRANDOM));
@@ -163,7 +171,7 @@ jeffexit(f, n, k)
  * changed and not written out. Normally bound
  * to "C-X C-C".
  */
-quit(f, n, k)
+int quit(int f, int n, int k)
 {
 	register int	s;
 
@@ -182,7 +190,7 @@ quit(f, n, k)
  * in keyboard processing. Set up
  * variables and return.
  */
-ctlxlp(f, n, k)
+int ctlxlp(int f, int n, int k)
 {
 	if (kbdmip!=NULL || kbdmop!=NULL) {
 		eprintf("Not now");
@@ -199,7 +207,7 @@ ctlxlp(f, n, k)
  * above routine. Set up the variables
  * and return to the caller.
  */
-ctlxrp(f, n, k)
+int ctlxrp(int f, int n, int k)
 {
 	if (kbdmip == NULL) {
 		eprintf("Not now");
@@ -218,7 +226,7 @@ ctlxrp(f, n, k)
  * Return TRUE if all ok, else
  * FALSE.
  */
-ctlxe(f, n, k)
+int ctlxe(int f, int n, int k)
 {
 	register int	c;
 	register int	af;
@@ -257,7 +265,7 @@ ctlxe(f, n, k)
  * to do general aborting of
  * stuff.
  */
-ctrlg(f, n, k)
+int ctrlg(int f, int n, int k)
 {
 	ttbeep();
 	if (kbdmip != NULL) {
@@ -273,7 +281,7 @@ ctrlg(f, n, k)
  * the message system, and call the message reading code.
  * Don't call display if there is an argument.
  */
-showversion(f, n, k)
+int showversion(int f, int n, int k)
 {
 	register char	**cpp;
 	register char	*cp;

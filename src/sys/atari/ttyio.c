@@ -8,6 +8,7 @@
  */
 #include	"def.h"
 #include	<osbind.h>
+#include    "tty.h"
 
 int	nrow;				/* Terminal size, rows.		*/
 int	ncol;				/* Terminal size, columns.	*/
@@ -18,7 +19,7 @@ int	ncol;				/* Terminal size, columns.	*/
  * language "getnrow" and "getncol"
  * routines.
  */
-ttopen()
+void ttopen(void)
 {
 	nrow = getnrow();
 	if (nrow > NROW)
@@ -30,14 +31,14 @@ ttopen()
 /*
  * No-op.
  */
-ttclose()
+void ttclose(void)
 {
 }
 
 /*
  * Put character.
  */
-ttputc(c)
+void ttputc(char c)
 {
 	Crawio(c & 0x7F);
 }
@@ -45,14 +46,14 @@ ttputc(c)
 /*
  * No-op.
  */
-ttflush()
+void ttflush(void)
 {
 }
 
 /*
  * Get characters.
  */
-ttgetc()
+char ttgetc(void)
 {
 	return (Crawcin() & 0x7F);
 }

@@ -14,13 +14,19 @@
  * internal use.
  */
 #include	"def.h"
+#include    "echo.h"
+#include    "line.h"
+#include    "region.h"
+
+static int getregion(REGION *rp);
+static int setsize(REGION *rp, long size);
 
 /*
  * Kill the region. Ask "getregion"
  * to figure out the bounds of the region.
  * Move "." to the start, and kill the characters.
  */
-killregion(f, n, k)
+int killregion(int f, int n, int k)
 {
 	register int	s;
 	REGION		region;
@@ -41,7 +47,7 @@ killregion(f, n, k)
  * at all. This is a bit like a kill region followed
  * by a yank.
  */
-copyregion(f, n, k)
+int copyregion(int f, int n, int k)
 {
 	register LINE	*linep;
 	register int	loffs;
@@ -77,7 +83,7 @@ copyregion(f, n, k)
  * doing the changes. Call "lchange" to ensure that
  * redisplay is done in all buffers. 
  */
-lowerregion(f, n, k)
+int lowerregion(int f, int n, int k)
 {
 	register LINE	*linep;
 	register int	loffs;
@@ -111,7 +117,7 @@ lowerregion(f, n, k)
  * doing the changes. Call "lchange" to ensure that
  * redisplay is done in all buffers. 
  */
-upperregion(f, n, k)
+int upperregion(int f, int n, int k)
 {
 	register LINE	*linep;
 	register int	loffs;
@@ -151,8 +157,7 @@ upperregion(f, n, k)
  * get an ABORT status, because I might add a "if regions is big,
  * ask before clobberring" flag.
  */
-getregion(rp)
-register REGION	*rp;
+static int getregion(REGION *rp)
 {
 	register LINE	*flp;
 	register LINE	*blp;
@@ -205,9 +210,7 @@ register REGION	*rp;
 /*
  * Set size, and check for overflow.
  */
-setsize(rp, size)
-register REGION	*rp;
-register long	size;
+static int setsize(REGION *rp, long size)
 {
 	rp->r_size = size;
 	if (rp->r_size != size) {

@@ -12,7 +12,7 @@
  * the display in a barely buffered fashion.
  */
 #include	"def.h"
-
+#include    "tty.h"
 #include	<sgtty.h>
 
 #define	NOBUF	512			/* Output buffer size.		*/
@@ -35,7 +35,7 @@ int	ncol;				/* Terminal size, columns.	*/
  * stolen to send signals. Use CBREAK mode, and set all
  * characters but start and stop to 0xFF.
  */
-ttopen()
+void ttopen(void)
 {
 	register char	*cp;
 	extern char	*getenv();
@@ -110,7 +110,7 @@ register char	*name;
  * before we go back home to the shell. Put all of
  * the terminal parameters back.
  */
-ttclose()
+void ttclose(void)
 {
 	ttflush();
 	if (ioctl(0, TIOCSLTC, &oldltchars) < 0)
@@ -126,7 +126,7 @@ ttclose()
  * Characters are buffered up, to make things
  * a little bit more efficient.
  */
-ttputc(c)
+void ttputc(char c)
 {
 	if (nobuf >= NOBUF)
 		ttflush();
@@ -149,7 +149,7 @@ ttflush()
  * All 8 bits are returned, so that you can use
  * a multi-national terminal.
  */
-ttgetc()
+char ttgetc(void)
 {
 	char	buf[1];
 
