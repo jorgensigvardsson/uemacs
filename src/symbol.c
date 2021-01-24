@@ -20,6 +20,8 @@
 #include    "random.h"
 #include    "region.h"
 #include    "search.h"
+#include    "symbol.h"
+#include    "tty.h"
 #include    "window.h"
 #include    "word.h"
 

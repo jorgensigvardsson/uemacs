@@ -8,6 +8,7 @@
  */
 #include	"def.h"
 #include    "tty.h"
+#include    "kbd.h"
 
 static int getctl();
 

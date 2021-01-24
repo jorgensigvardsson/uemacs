@@ -13,6 +13,7 @@
  * the support for the terminal he owns.
  */
 #include	"def.h"
+#include    "tty.h"
 
 #define	BEL	0x07			/* BEL character.		*/
 #define	ESC	0x1B			/* ESC character.		*/

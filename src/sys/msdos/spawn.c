@@ -9,6 +9,7 @@
 #include	"def.h"
 #include    "echo.h"
 #include    "spawn.h"
+#include    "tty.h"
 
 #include	<dos.h>
 

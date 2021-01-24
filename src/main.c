@@ -13,6 +13,7 @@
 #include    "file.h"
 #include    "kbd.h"
 #include    "main.h"
+#include    "spawn.h"
 #include    "symbol.h"
 #include    "tty.h"
 

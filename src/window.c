@@ -9,6 +9,7 @@
 #include	"def.h"
 #include    "echo.h"
 #include    "display.h"
+#include    "tty.h"
 #include    "window.h"
 
 /*

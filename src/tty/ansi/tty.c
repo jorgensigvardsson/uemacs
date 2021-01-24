@@ -18,6 +18,7 @@
  * set to infinity!
  */
 #include	"def.h"
+#include    "tty.h"
 
 #define	SCALD	0			/* Buggy display.		*/
 

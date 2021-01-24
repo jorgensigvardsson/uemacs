@@ -9,6 +9,7 @@
 #include	"def.h"
 #include    "echo.h"
 #include    "fileio.h"
+#include    <unistd.h>
 
 static	FILE	*ffp;
 
@@ -126,8 +127,7 @@ int ffgetline(char buf[], int nbuf)
  * right thing here; I don't care that much as
  * I don't enable backups myself.
  */
-fbackupfile(fname)
-char	*fname;
+int fbackupfile(char *fname)
 {
 	register char	*nname;
 

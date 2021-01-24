@@ -10,11 +10,15 @@
  * interracts with the job control stuff
  * in the 4.X BSD C shell.
  */
+#define _POSIX_C_SOURCE 1
 #include	"def.h"
 #include    "echo.h"
 #include    "spawn.h"
+#include    "tty.h"
 
+#include    <sys/wait.h>
 #include	<signal.h>
+#include    <unistd.h>
 
 char	*shellp	= NULL;			/* Saved "SHELL" name.		*/
 

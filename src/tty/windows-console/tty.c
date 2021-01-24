@@ -4,6 +4,7 @@
  * J�rgen Sigvardsson <jorgen.sigvardsson@gmail.com>
  */
 #include	"def.h"
+#include    "tty.h"
 
 #define	BEL	0x07			/* BEL character.		*/
 #define	ESC	0x1B			/* ESC character.		*/
