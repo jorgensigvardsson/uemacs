@@ -45,7 +45,10 @@ int showcpos(int f, int n, int k)
 
 	clp = lforw(curbp->b_linep);		/* Collect the data.	*/
 	cbo = 0;
+    cbyte = 0;
+    cchar = 0;
 	nchar = 0;
+    cline = 0;
 	nline = 1;				/* Origin 1.		*/
 	for (;;) {
 		if (clp == curwp->w_dotp) {

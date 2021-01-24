@@ -156,10 +156,10 @@
 #define	_L	0x04			/* Lower case letter.		*/
 #define	_C	0x08			/* Control.			*/
 
-#define	ISWORD(c)	((cinfo[(c)]&_W)!=0)
-#define	ISCTRL(c)	((cinfo[(c)]&_C)!=0)
-#define	ISUPPER(c)	((cinfo[(c)]&_U)!=0)
-#define	ISLOWER(c)	((cinfo[(c)]&_L)!=0)
+#define	ISWORD(c)	((cinfo[(int)(c)]&_W)!=0)
+#define	ISCTRL(c)	((cinfo[(int)(c)]&_C)!=0)
+#define	ISUPPER(c)	((cinfo[(int)(c)]&_U)!=0)
+#define	ISLOWER(c)	((cinfo[(int)(c)]&_L)!=0)
 #define	TOUPPER(c)	((c)-0x20)
 #define	TOLOWER(c)	((c)+0x20)
 

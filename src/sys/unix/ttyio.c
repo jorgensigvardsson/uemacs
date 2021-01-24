@@ -39,7 +39,6 @@ void ttopen(void)
 	/* Save pos+attr, disable margins, set cursor far away, query pos */
 	const char query[] = "\e7" "\e[r" "\e[999;999H" "\e[6n";
 	struct pollfd fd = { 1, POLLIN, 0 };
-	int row, col;
 
 	/* Adjust output channel */
 	tcgetattr(1, &oldtty);			/* save old state */

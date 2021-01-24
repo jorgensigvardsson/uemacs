@@ -23,7 +23,6 @@
 int bindtokey(int f, int n, int k)
 {
 	register int	s;
-	register char	*cp;
 	register SYMBOL	*sp;
 	register int	c;
 	char		xname[NXNAME];
@@ -131,7 +130,7 @@ int wallchart(int f, int n, int k)
 			while (cp1 < &buf[16])	/* Goto column 16.	*/
 				*cp1++ = ' ';				
 			cp2 = sp->s_name;	/* Add function name.	*/
-			while (*cp1++ = *cp2++)
+			while ((*cp1++ = *cp2++))
 				;
 			if (addline(buf) == FALSE)
 				return (FALSE);
