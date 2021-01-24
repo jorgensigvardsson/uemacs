@@ -2,7 +2,7 @@ bin_PROGRAMS    = uemacs
 
 # TODO: qualify based on target and front-end
 uemacs_CPPFLAGS = -I$(srcdir) -I$(srcdir)/tty/ansi -I$(srcdir)/sys/unix
-uemacs_CFLAGS   = -std=c11 -Wno-incompatible-pointer-types -Wno-return-type -Wall -O2
+uemacs_CFLAGS   = -std=c11 -Wno-incompatible-pointer-types -Wno-return-type -Wall -O2 -Wpedantic
 uemacs_SOURCES  = basic.c buffer.c cinfo.c def.h display.c echo.c extend.c	\
 		  file.c kbd.c line.c main.c random.c region.c search.c		\
 		  symbol.c version.c window.c word.c

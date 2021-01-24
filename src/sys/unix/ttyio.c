@@ -37,7 +37,7 @@ int	ncol;				/* Terminal size, columns.	*/
 void ttopen(void)
 {
 	/* Save pos+attr, disable margins, set cursor far away, query pos */
-	const char query[] = "\e7" "\e[r" "\e[999;999H" "\e[6n";
+	const char query[] = "\0337" "\033[r" "\033[999;999H" "\033[6n";
 	struct pollfd fd = { 1, POLLIN, 0 };
 
 	/* Adjust output channel */
@@ -58,8 +58,8 @@ void ttopen(void)
 
 	/* Query size of terminal by first trying to position cursor */
 	if (write(1, query, sizeof(query)) != -1 && poll(&fd, 1, 300) > 0) {
-		/* Terminal responds with \e[row;posR */
-		if (scanf("\e[%d;%dR", &nrow, &ncol) != 2) {
+		/* Terminal responds with \033[row;posR */
+		if (scanf("\033[%d;%dR", &nrow, &ncol) != 2) {
 			nrow = 80;
 			ncol = 24;
 		}
