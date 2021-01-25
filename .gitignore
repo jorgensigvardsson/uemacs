@@ -1,4 +1,6 @@
 *~
+uemacs.wasm
+uemacs.js
 *.o
 *.obj
 *.exe

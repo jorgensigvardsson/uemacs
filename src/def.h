@@ -300,6 +300,10 @@ typedef	struct	LINE {
 /*
  * Externals.
  */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern	int	thisflag;
 extern	int	lastflag;
 extern	int	curgoal;
@@ -335,3 +339,6 @@ extern	int	nmsg;
 extern	int	curmsgf;
 extern	int	newmsgf;
 extern	char	msg[];
+#ifdef __cplusplus
+}
+#endif

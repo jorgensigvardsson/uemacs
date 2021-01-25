@@ -1,6 +1,10 @@
 #ifndef __RANDOM_H__
 #define __RANDOM_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int showcpos(int f, int n, int k);
 int twiddle(int f, int n, int k);
 int quote(int f, int n, int k);
@@ -13,5 +17,9 @@ int backdel(int f, int n, int k);
 int killline(int f, int n, int k);
 int yank(int f, int n, int k);
 int forwdel(int f, int n, int k);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __RANDOM_H__ */

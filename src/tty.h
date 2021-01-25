@@ -1,6 +1,10 @@
 #ifndef __TTY_H__
 #define __TTY_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void ttinit(void);
 void tttidy(void);
 void ttopen(void);
@@ -20,5 +24,9 @@ void ttdell(int row, int bot, int nchunk);
 void ttwindow(int top, int bot);
 void ttresize();
 void ttykeymapinit(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __TTY_H__ */
